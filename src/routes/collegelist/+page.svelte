@@ -24,7 +24,7 @@
 </script>
 
 <div class="p-4 min-h-full h-screen">
-    <h2 class="text-xl font-semibold mb-4 text-white">Installed Colleges</h2>
+    <h2 class="text-3xl font-semibold mb-4 text-black">College List</h2>
     <div class=" h-screen overflow-auto">
         <div class="flex flex-wrap -mx-2 h-max">
             {#each colleges as college}
