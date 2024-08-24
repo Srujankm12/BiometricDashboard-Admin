@@ -3,23 +3,28 @@
     { id: 1, collegeId: 'oihioioxiohd', status: 'Active' },
     { id: 2, collegeId: 'djoihwqdoiooix', status: 'Active' },
     { id: 3, collegeId: 'flknnhofi', status: 'InActive' },
-
-
   ];
-  let showModal = false;
 
-  function toggleModal() {
-      showModal = !showModal;
+  let showModal1 = false;
+  let showModal2 = false;
+
+  function toggleModal(modalNumber) {
+    if (modalNumber === 1) {
+      showModal1 = !showModal1;
+    } else if (modalNumber === 2) {
+      showModal2 = !showModal2;
+    }
   }
-  function deletepage(){
-    
+
+  function deletepage() {
+    // Your delete logic here
   }
 </script>
 
 <div class="overflow-x-auto p-4">
   <div class="max-h-screen overflow-y-auto">
     <table class="min-w-full bg-white shadow-md overflow-hidden rounded-lg">
-      <thead class=" top-0 bg-black text-white  ">
+      <thead class="top-0 bg-black text-white">
         <tr>
           <th class="text-left py-3 px-4 uppercase font-semibold text-sm">ID</th>
           <th class="text-left py-3 px-4 uppercase font-semibold text-sm">UNIT ID</th>
@@ -38,7 +43,7 @@
               </span>
             </td>
             <td class="py-3 px-4">
-              <button on:click={toggleModal} class="text-red-500 hover:text-red-700">
+              <button on:click={() => toggleModal(1)} class="text-red-500 hover:text-red-700">
                 Delete
               </button>
             </td>
@@ -46,64 +51,83 @@
         {/each}
       </tbody>
     </table>
-    
   </div>
   <div class="mt-auto text-center rounded-lg float-right p-8">
-      <button
-          class="w-20 h-20 bg-white absolute bottom-0 right-0 text-black text-center text-4xl font-medium rounded-full hover:text-white hover:bg-black duration-700 border border-inherit shadow-xl "
-          on:click={toggleModal}
-      >
-          +
-      </button>
+    <button
+      class="w-20 h-20 bg-white absolute bottom-0 right-0 text-black text-center text-4xl font-medium rounded-full hover:text-white hover:bg-black duration-700 border border-inherit shadow-xl"
+      on:click={() => toggleModal(2)}
+    >
+      +
+    </button>
   </div>
-  {#if showModal}
+
+  {#if showModal1}
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      on:click={() => toggleModal(1)}
+    >
       <div
-          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center "
-          on:click={toggleModal}
+        class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative"
+        on:click|stopPropagation
       >
-          <div
-              class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative "
-              on:click|stopPropagation
-          >
-              <h1
-                  class="text-center text-2xl bg-whiterounded-full py-4 mb-8 font-bold"
-              >
-                 Are you sure?
-              </h1>
-              <div class="mb-6">
-               
-              </div>
-              <div class="mb-6">
-                  <label
-                      class="block text-black text-1xl font-semibold mb-2 p-3"
-                      for="password"
-                  >
-                     Unit ID
-                  </label>
-                  <input
-                      name="text"
-                      type="id"
-                      placeholder="Unit ID"
-                      class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                  
-              </div>
-              <div class="flex items-center justify-center">
-                  <button
-                      class="bg-black text-white font-bold py-4 px-4 text-1xl rounded-lg w-full pl-3 pr-3 mt-10"
-                    on:click={deletepage}
-                    
-                  >
-                    Delete
-                  </button>
-                  
-              </div>
-          </div>
-          
+      <h1 class="text-center text-2xl rounded-full py-4 mb-8 font-bold">
+       Are you sure ?
+      </h1>
+      <div class="mb-6">
+        <label class="block text-black text-1xl font-semibold mb-2 p-3" for="unitId">
+        Delete
+        </label>
+        <input
+          name="text"
+          type="text"
+          placeholder="Unit ID"
+          class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
+        />
       </div>
+        <div class="flex items-center justify-center">
+            
+          <button
+            class="bg-black text-white font-bold py-4 px-4 text-1xl rounded-lg w-full pl-3 pr-3 mt-10"
+            on:click={deletepage}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   {/if}
-  
+
+  {#if showModal2}
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      on:click={() => toggleModal(2)}
+    >
+      <div
+        class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative"
+        on:click|stopPropagation
+      >
+        <h1 class="text-center text-2xl rounded-full py-4 mb-8 font-bold">
+          Create a new Unit ID
+        </h1>
+        <div class="mb-6">
+          <label class="block text-black text-1xl font-semibold mb-2 p-3" for="unitId">
+            Unit ID
+          </label>
+          <input
+            name="text"
+            type="text"
+            placeholder="Unit ID"
+            class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div class="flex items-center justify-center">
+          <button
+            class="bg-black text-white font-bold py-4 px-4 text-1xl rounded-lg w-full pl-3 pr-3 mt-10"
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  {/if}
 </div>
-
-
-
