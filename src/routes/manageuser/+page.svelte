@@ -1,13 +1,73 @@
 <script>
-    let email = '';
-    let selectedCollege = '';
+    import { onMount } from "svelte";
 
-    const colleges = [
-        'College A',
-        'College B',
-        'College C',
-        'College D'
-    ];
+    let email = '';
+    let password ='';
+    let selectedCollege = '';
+    let jsonResponse;
+    let colleges = [
+       
+        ];
+   let users=[
+     
+   ];
+    const mounts= async () => {
+        try {
+            let response = await fetch("https://go-fingerprint.onrender.com/admin/getusers", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                   
+                }),
+            });
+
+            if (response.ok) {
+                jsonResponse = await response.json();
+                
+                users = jsonResponse['data']
+                console.log(users)
+                showModal = false;
+                await mounts();
+            } else {
+                jsonResponse = await response.json();
+                message = jsonResponse["message"];
+            }
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+        
+    };
+    
+    const Request = async () => {
+        try {
+            let response = await fetch("https://go-fingerprint.onrender.com/admin/giveaccess", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                   "email":email,
+                   "username": selectedCollege,
+                   "password": password,
+                }),
+            });
+
+            if (response.ok) {
+                jsonResponse = await response.json();
+                users = jsonResponse['data']
+                console.log(users)
+                showModal = false;
+                await mounts();
+            } else {
+                jsonResponse = await response.json();
+                message = jsonResponse["message"];
+            }
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+        
+    };
+    onMount(() => {
+        mounts();
+    });
 </script>
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -25,6 +85,17 @@
                 class="w-full border rounded-lg py-3 px-4 text-gray-700 text-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
             />
         </div>
+        <div class="mb-6">
+            <label class="block text-black text-xl font-medium mb-2" for="email">Password</label>
+            <input 
+                bind:value={password}
+                autocomplete="current-password"
+                type="password"
+                name="password"
+                placeholder="PASSWORD"
+                class="w-full border rounded-lg py-3 px-4 text-gray-700 text-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+            />
+        </div>
         
         <div class="mb-6">
             <label class="block text-black text-xl font-medium mb-2" for="college">Select College</label>
@@ -35,14 +106,16 @@
                 class="w-full border rounded-lg py-3 px-4 text-gray-700 text-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
             >
                 <option value="" disabled>Select a college</option>
-                {#each colleges as college}
-                    <option value={college}>{college}</option>
+                {#each users as college}
+                    <option value={college.username}>{college.username}</option>
                 {/each}
             </select>
         </div>
         
         <div>
-            <button class="w-full bg-black text-white font-semibold rounded-lg py-3 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600">
+            <button 
+                on:click={Request}
+                class="w-full bg-black text-white font-semibold rounded-lg py-3 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-600">
                 Access
             </button>
         </div>

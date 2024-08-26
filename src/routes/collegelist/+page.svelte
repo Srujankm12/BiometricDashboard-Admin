@@ -89,16 +89,25 @@
                 <h2 class="text-3xl font-semibold mb-4 text-left">Menu</h2>
                 <ul>
                     <li class="mb-4">
-                        <a href="/Homepage" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Home</a>
+                        <button class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold " on:click={()=>{
+                          goto('/collegelist')
+                        }}>
+                            Home </button>
                     </li>
                     <li class="mb-4">
-                        <a href="/manageuser" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Manage User</a>
+                      <button class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold" on:click={()=>{
+                        goto('/manageuser')
+                      }}> Manage User</button>
                     </li>
                     <li class="mb-4">
-                        <a href="/" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Settings</a>
+                        <button class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold " on:click={()=>{
+                          goto('/new')
+                        }}>Settings</button>
                     </li>
                     <li class="mb-4">
-                        <a href="/" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Logout</a>
+                      <button class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold" on:click={()=>{
+                        goto('/logout')
+                      }}>Logout</button>
                     </li>
                 </ul>
             </div>
