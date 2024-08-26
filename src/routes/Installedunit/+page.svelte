@@ -16,18 +16,18 @@
     }
   }
 
-  function deletepage() {
-    // Your delete logic here
+  function deletePage() {
+    // Add your delete logic here
   }
 </script>
 
 <div class="overflow-x-auto p-4">
   <div class="max-h-screen overflow-y-auto">
-    <table class="min-w-full bg-white shadow-md overflow-hidden rounded-lg">
-      <thead class="top-0 bg-black text-white">
+    <table class="min-w-full bg-white shadow-md rounded-lg">
+      <thead class="bg-black text-white sticky top-0">
         <tr>
           <th class="text-left py-3 px-4 uppercase font-semibold text-sm">ID</th>
-          <th class="text-left py-3 px-4 uppercase font-semibold text-sm">UNIT ID</th>
+          <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Unit ID</th>
           <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Status</th>
           <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Delete</th>
         </tr>
@@ -52,14 +52,13 @@
       </tbody>
     </table>
   </div>
-  <div class="mt-auto text-center rounded-lg float-right p-8">
-    <button
-      class="w-20 h-20 bg-white absolute bottom-0 right-0 text-black text-center text-4xl font-medium rounded-full hover:text-white hover:bg-black duration-700 border border-inherit shadow-xl"
-      on:click={() => toggleModal(2)}
-    >
-      +
-    </button>
-  </div>
+
+  <button
+    class="w-16 h-16 bg-white fixed bottom-4 right-4 text-black text-center text-3xl font-medium rounded-full hover:text-white hover:bg-black duration-700 border shadow-xl"
+    on:click={() => toggleModal(2)}
+  >
+    +
+  </button>
 
   {#if showModal1}
     <div
@@ -70,25 +69,20 @@
         class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative"
         on:click|stopPropagation
       >
-      <h1 class="text-center text-2xl rounded-full py-4 mb-8 font-bold">
-       Are you sure ?
-      </h1>
-      <div class="mb-6">
-        <label class="block text-black text-1xl font-semibold mb-2 p-3" for="unitId">
-        Delete
-        </label>
-        <input
-          name="text"
-          type="text"
-          placeholder="Unit ID"
-          class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
+        <h1 class="text-center text-2xl font-bold mb-8">Are you sure?</h1>
+        <div class="mb-6">
+          <label class="block text-black text-xl font-semibold mb-2" for="unitId">Delete</label>
+          <input
+            name="unitId"
+            type="text"
+            placeholder="Unit ID"
+            class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
         <div class="flex items-center justify-center">
-            
           <button
-            class="bg-black text-white font-bold py-4 px-4 text-1xl rounded-lg w-full pl-3 pr-3 mt-10"
-            on:click={deletepage}
+            class="bg-black text-white font-bold py-4 px-4 text-xl rounded-lg w-full mt-10"
+            on:click={deletePage}
           >
             Delete
           </button>
@@ -106,23 +100,19 @@
         class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative"
         on:click|stopPropagation
       >
-        <h1 class="text-center text-2xl rounded-full py-4 mb-8 font-bold">
-          Create a new Unit ID
-        </h1>
+        <h1 class="text-center text-2xl font-bold mb-8">Create a new Unit ID</h1>
         <div class="mb-6">
-          <label class="block text-black text-1xl font-semibold mb-2 p-3" for="unitId">
-            Unit ID
-          </label>
+          <label class="block text-black text-xl font-semibold mb-2" for="unitId">Unit ID</label>
           <input
-            name="text"
+            name="unitId"
             type="text"
             placeholder="Unit ID"
-            class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-auto border rounded-lg w-full text-sm py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <div class="flex items-center justify-center">
           <button
-            class="bg-black text-white font-bold py-4 px-4 text-1xl rounded-lg w-full pl-3 pr-3 mt-10"
+            class="bg-black text-white font-bold py-4 px-4 text-xl rounded-lg w-full mt-10"
           >
             Create
           </button>
@@ -131,3 +121,9 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>

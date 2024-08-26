@@ -28,8 +28,8 @@
     }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <div class="max-w-xl h-[36rem] w-full bg-white rounded-3xl p-8 shadow-2xl">
+<div class="min-h-screen flex items-center justify-center bg-gray-50 ">
+    <div class="max-w-xl  w-full bg-white rounded-3xl p-8 shadow-2xl">
         <form method="post"></form>
         <h1
             class="text-center text-3xl bg-white rounded-full py-4 mb-8 font-bold"
