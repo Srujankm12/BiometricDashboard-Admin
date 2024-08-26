@@ -1,12 +1,14 @@
 <script>
+    import { onMount } from "svelte";
+
   let tableData = [
-    { id: 1, collegeId: 'oihioioxiohd', status: 'Active' },
-    { id: 2, collegeId: 'djoihwqdoiooix', status: 'Active' },
-    { id: 3, collegeId: 'flknnhofi', status: 'InActive' },
   ];
+  export let data;
 
   let showModal1 = false;
   let showModal2 = false;
+  let jsonResponse;
+  let message;
 
   function toggleModal(modalNumber) {
     if (modalNumber === 1) {
@@ -15,6 +17,30 @@
       showModal2 = !showModal2;
     }
   }
+  
+  let mounts = async () => {
+    let response = await fetch("https://go-fingerprint.onrender.com/admin/getmachines", 
+              { 
+                  method: "POST",
+                  credentials:"include",
+                  body: JSON.stringify({
+                    "user_id": data,
+                  }),
+              }
+          );
+    if (response.status === 200) {
+        jsonResponse = await response.json();
+        tableData = jsonResponse['data']
+        console.log(tableData)
+    } 
+    else{
+        jsonResponse = await response.json();
+        message = jsonResponse['message']
+    };
+  }
+  onMount({
+    mounts
+  });
 
   function deletePage() {
     // Add your delete logic here
@@ -61,11 +87,11 @@
   </button>
 
   {#if showModal1}
-    <div
+    <button
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       on:click={() => toggleModal(1)}
     >
-      <div
+      <button
         class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative"
         on:click|stopPropagation
       >
@@ -87,16 +113,16 @@
             Delete
           </button>
         </div>
-      </div>
-    </div>
+      </button>
+    </button>
   {/if}
 
   {#if showModal2}
-    <div
+    <button
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       on:click={() => toggleModal(2)}
     >
-      <div
+      <button
         class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative"
         on:click|stopPropagation
       >
@@ -117,8 +143,8 @@
             Create
           </button>
         </div>
-      </div>
-    </div>
+      </button>
+    </button>
   {/if}
 </div>
 

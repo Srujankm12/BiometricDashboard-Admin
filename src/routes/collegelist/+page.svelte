@@ -1,36 +1,78 @@
 <script>
-    let colleges = [
-        { name: "Alvas - Naturopathy" },
-        { name: "Expert" },
-        { name: "Yenepoya" },
-        { name: "Expert" },
-        { name: "Yenepoya" },
-        { name: "Alvas - Naturopathy" },
-        { name: "Expert" },
-        { name: "Yenepoya" },
-        { name: "Expert" },
-        { name: "Yenepoya" },
-        { name: "Alvas - Naturopathy" },
-        { name: "Expert" },
-        { name: "Yenepoya" },
-        { name: "Expert" },
-        { name: "Yenepoya" },
-    ];
+    import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
 
+    let colleges = [];
+    let username = '';
+    let password = '';
+    let jsonResponse;
+    let message;
     let showModal = false;
     let drawerOpen = false;
 
+    // Function to fetch users and populate the colleges list
+    let mounts = async () => {
+        try {
+            let response = await fetch("https://go-fingerprint.onrender.com/admin/getusers", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({}),
+            });
+
+            if (response.ok) {
+                jsonResponse = await response.json();
+                colleges = jsonResponse['data'];
+                showModal = false;
+            } else {
+                jsonResponse = await response.json();
+                message = jsonResponse['message'];
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    // Function to handle the creation of a new user
+    const Request = async () => {
+        try {
+            let response = await fetch("https://go-fingerprint.onrender.com/users/register", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                    "username": username,
+                    "password": password
+                }),
+            });
+
+            if (response.ok) {
+                jsonResponse = await response.json();
+                showModal = false;
+                await mounts();
+            } else {
+                jsonResponse = await response.json();
+                message = jsonResponse["message"];
+            }
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+    };
+
+    // Call the mounts function when the component is mounted
+    onMount(() => {
+        mounts();
+    });
+
+    // Toggle the modal visibility
     function toggleModal() {
         showModal = !showModal;
     }
 
+    // Toggle the drawer visibility
     function toggleDrawer() {
         drawerOpen = !drawerOpen;
     }
 
-    import { goto } from "$app/navigation";
-
-    const navigateToInstallPage = () => goto("/Installedunit");
+    // Navigate to the create college page
     const createCollege = () => goto("/new");
 </script>
 
@@ -40,26 +82,28 @@
     </button>
 
     <!-- Drawer -->
-    <div class="fixed inset-0 bg-black bg-opacity-50 z-40" class:hidden={!drawerOpen} on:click={toggleDrawer}></div>
-    <div class="fixed inset-y-0 left-0 bg-white w-64 shadow-xl z-50 transform" class:translate-x-[-100%]={!drawerOpen} transition-transform duration-300 ease-in-out>
-        <div class="p-4">
-            <h2 class="text-3xl font-semibold mb-4 text-left">Menu</h2>
-            <ul>
-                <li class="mb-4">
-                    <a href="/Homepage" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Home</a>
-                </li>
-                <li class="mb-4">
-                    <a href="/manageuser" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Manage User</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Settings</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Logout</a>
-                </li>
-            </ul>
+    {#if drawerOpen}
+        <button class="fixed inset-0 bg-black bg-opacity-50 z-40" on:click={toggleDrawer}></button>
+        <div class="fixed inset-y-0 left-0 bg-white w-64 shadow-xl z-50 transform transition-transform duration-300 ease-in-out">
+            <div class="p-4">
+                <h2 class="text-3xl font-semibold mb-4 text-left">Menu</h2>
+                <ul>
+                    <li class="mb-4">
+                        <a href="/Homepage" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Home</a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/manageuser" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Manage User</a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Settings</a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="/" class="block text-lg text-black text-center rounded-lg hover:text-white hover:bg-black duration-500 py-2 px-4 font-semibold">Logout</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+    {/if}
 
     <h2 class="text-3xl font-semibold mb-4 text-black">College List</h2>
     <div class="overflow-auto">
@@ -67,11 +111,11 @@
             {#each colleges as college}
                 <div class="w-full sm:w-1/2 lg:w-1/4 p-4">
                     <div class="border rounded-2xl p-8 bg-white shadow-xl flex flex-col h-72">
-                        <span class="text-start mt-2 text-2xl font-semibold">{college.name}</span>
+                        <span class="text-start mt-2 text-2xl font-semibold">{college.username}</span>
                         <div class="flex-grow"></div>
                         <button
                             class="text-xl p-3 rounded-lg bg-black text-white font-medium self-end"
-                            on:click={navigateToInstallPage}
+                            on:click={() => goto("/collegelist/"+college.user_id)}
                         >
                             Manage
                         </button>
@@ -91,40 +135,50 @@
 
     <!-- Modal -->
     {#if showModal}
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" on:click={toggleModal}>
-            <div class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative" on:click|stopPropagation>
+        <button class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" on:click={toggleModal}>
+            <button class="max-w-lg w-full bg-white rounded-3xl p-8 shadow-3xl relative" on:click|stopPropagation>
                 <h1 class="text-center text-2xl py-4 mb-8 font-bold">ADD NEW COLLEGE</h1>
-                <div class="mb-6">
-                    <label class="block text-black text-xl font-semibold mb-2 p-2">USERNAME</label>
-                    <input
-                        type="text"
-                        placeholder="USERNAME"
-                        class="shadow border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                </div>
-                <div class="mb-6">
-                    <label class="block text-black text-xl font-semibold mb-2 p-2">PASSWORD</label>
-                    <input
-                        type="password"
-                        placeholder="PASSWORD"
-                        class="shadow border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                </div>
+
+                <form>
+                    <div class="mb-6">
+                        <label class="block text-black text-xl font-semibold mb-2 text-left px-2" for="username">USERNAME</label>
+                        <input
+                            bind:value={username}
+                            name="username"
+                            type="text"
+                            placeholder="USERNAME"
+                            class="shadow border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        />
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-black text-xl font-semibold mb-2 text-left px-2" for="password">PASSWORD</label>
+                        <input 
+                            bind:value={password}
+                            name="password"
+                            type="password"
+                            placeholder="PASSWORD"
+                            class="shadow border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        />
+                    </div>
+                </form>
+
                 <div class="flex items-center justify-center">
                     <button
+                        type="submit"
                         class="bg-black text-white font-bold py-4 px-4 text-xl rounded-lg w-full"
-                        on:click={createCollege}
+                        on:click={Request}
                     >
                         CREATE
                     </button>
                 </div>
-            </div>
-        </div>
+        </button>
+        </button>
     {/if}
 </div>
 
 <style>
-    .hidden {
-        display: none;
+    /* Apply Tailwind's reset classes to the label to avoid any unwanted styles */
+    label {
+        @apply border-none outline-none;
     }
 </style>
