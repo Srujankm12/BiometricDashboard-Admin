@@ -1,90 +1,111 @@
 <script>
     import { goto } from "$app/navigation";
-    let username;
-    let password;
-    let jsonResponse;
-    let isVisible = false;
-    let message;
-    const Request = async () => {
-      let response = await fetch("https://go-fingerprint.onrender.com/admin/login", 
-                { 
-                    method: "POST",
-                    credentials:"include",
-                    body: JSON.stringify({
-                      "username": username,
-                      "password": password
-                    }),
-                }
-            );
-      if (response.status === 200) {
-          jsonResponse = await response.json();
-          goto("/collegelist")
-      } 
-      else{
-          jsonResponse = await response.json();
-          message = jsonResponse["message"]
-          isVisible = true;
-      };
-    }
+    
+    let username = '';
+    let password = '';
+    let responseMessage = '';
+    let isErrorVisible = false;
+    let isLoading = false;
+
+    const handleLogin = async () => {
+        isLoading = true;
+        isErrorVisible = false;
+        responseMessage = '';
+
+        try {
+            const response = await fetch("https://go-fingerprint.onrender.com/admin/login", {
+                method: "POST",
+                
+                body: JSON.stringify({
+                    username,
+                    password,
+                }),
+            });
+
+            if (response.ok) {
+                // Navigate to the next page
+                goto("/collegelist");
+            } else {
+                // Handle error response
+                const jsonResponse = await response.json();
+                responseMessage = jsonResponse.message || 'An unexpected error occurred.';
+                isErrorVisible = true;
+            }
+        } catch (error) {
+            responseMessage = 'Failed to communicate with the server. Please try again later.';
+            console.log(error);
+            isErrorVisible = true;
+        } finally {
+            isLoading = false;
+        }
+    };
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-50 ">
-    <div class="max-w-xl  w-full bg-white rounded-3xl p-8 shadow-2xl">
-        <form method="post"></form>
-        <h1
-            class="text-center text-3xl bg-white rounded-full py-4 mb-8 font-bold"
-        >
-            LOGIN
-        </h1>
-        <div class="mb-6">
-            <label
-                class="block text-black text-2xl font-semibold mb-2 p-3"
-                for="usernames"
-            >
-                User ID
-            </label>
-            <input
-                autocomplete="username"
-                bind:value={username}
-                type="text"
-                name="username"
-                placeholder="USER ID"
-                class="shadow appearance-auto border rounded-lg w-full py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
-            />
-        </div>
-        <div class="mb-6">
-            <label
-                class="block text-black text-2xl font-semibold mb-2 p-3"
-                for="passwords"
-            >
-                Password
-            </label>
-            <input
-                autocomplete="current-password"
-                bind:value={password}
-                type="password"
-                name="password"
-                placeholder="PASSWORD"
-                class="shadow appearance-auto border rounded-lg w-full py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
-            />
+<style>
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid #ffffff;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 h-[450px] flex flex-col justify-between relative">
+        <h1 class="text-center text-2xl font-bold mb-6">Login</h1>
+        <div>
+            <div class="mb-6">
+                <label class="block text-lg font-semibold mb-2" for="username">
+                    User ID
+                </label>
+                <input
+                    id="username"
+                    autocomplete="username"
+                    bind:value={username}
+                    type="text"
+                    placeholder="USER ID"
+                    class="w-full p-3 border border-gray-300 rounded-lg text-lg"
+                />
+            </div>
+            <div class="mb-6">
+                <label class="block text-lg font-semibold mb-2" for="password">
+                    Password
+                </label>
+                <input
+                    id="password"
+                    autocomplete="current-password"
+                    bind:value={password}
+                    type="password"
+                    placeholder="PASSWORD"
+                    class="w-full p-3 border border-gray-300 rounded-lg text-lg"
+                />
+            </div>
         </div>
         <div class="flex items-center justify-center">
             <button
-                class="bg-black text-white font-bold py-4 px-4 text-2xl rounded-lg w-full pl-3 pr-3 mt-10"
-                 on:click={Request}
+                class="w-full bg-black text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center text-lg relative"
+                on:click={handleLogin}
+                disabled={isLoading}
             >
-                Login
+                {#if isLoading}
+                    <div class="spinner"></div>
+                {:else}
+                    Login
+                {/if}
             </button>
         </div>
     </div>
 </div>
 
-{#if isVisible}
-    <div
-      class="fixed bottom-4 right-4 bg-red-400 text-white font-bold shadow-lg  p-4 rounded-md"
-    >
-      {#if message}
-        {message}
-      {/if}
+{#if isErrorVisible}
+    <div class="fixed bottom-4 right-4 bg-red-500 text-white font-bold p-4 rounded-md shadow-lg">
+        {responseMessage}
     </div>
 {/if}
