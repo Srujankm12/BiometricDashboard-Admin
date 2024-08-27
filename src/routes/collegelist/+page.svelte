@@ -15,7 +15,7 @@
         try {
             const response = await fetch("https://go-fingerprint.onrender.com/admin/getusers", {
                 method: "POST",
-               credentials:"include",
+                credentials:"include",
                 body: JSON.stringify({}),
             });
 
