@@ -7,6 +7,3 @@
     });
 </script>
 
-
-<h1> this is setting page</h1>
-<h1>comming soon</h1>

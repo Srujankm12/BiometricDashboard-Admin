@@ -23,9 +23,9 @@
       });
       const result = await response.json();
       if (response.ok && Array.isArray(result.data)) {
-        tableData = result.data;
+        tableData = result['data'];
       } else {
-        responseMessage = result.message || 'Unexpected error';
+        responseMessage = result['message'] || 'Unexpected error';
       }
     } catch (error) {
       responseMessage = 'Fetch error: ' + error.message;
@@ -228,12 +228,6 @@
           Cancel
         </button>
       </div>
-    </div>
-  {/if}
-
-  {#if responseMessage}
-    <div class="fixed bottom-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-md z-50">
-      {responseMessage}
     </div>
   {/if}
 </div>
