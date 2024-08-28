@@ -1,7 +1,7 @@
-<header class="fixed top-0 left-0 w-full bg-black py-2 flex items-center justify-center z-50">
+<header class="fixed top-0 left-0 w-full bg-black py-2 px-2 flex items-center md:justify-start justify-center z-50 ">
     <img
-        class="w-14 h-14"
-        src="https://img.freepik.com/premium-vector/black-background-with-white-x-logo-it_853558-1327.jpg"
+        class="w-44 h-16"
+        src="/logoo.png"
         alt="Logo"
     />
 </header>
