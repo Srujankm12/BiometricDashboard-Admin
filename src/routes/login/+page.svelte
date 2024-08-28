@@ -24,7 +24,7 @@
 
             if (response.ok) {
                 // Navigate to the next page
-                goto("/collegelist");
+               await goto("/collegelist");
             } else {
                 // Handle error response
                 const jsonResponse = await response.json();

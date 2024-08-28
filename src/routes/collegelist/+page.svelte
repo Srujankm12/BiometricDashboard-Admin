@@ -103,11 +103,12 @@
 
 <!-- Fixed Add Button -->
 <button
-    class="w-16 h-16 bg-white fixed bottom-8 right-8 text-black text-4xl font-medium rounded-full hover:text-white hover:bg-black duration-700 border shadow-xl"
+    class="w-16 h-16 bg-black fixed bottom-8 right-8 text-white text-3xl font-medium rounded-full hover:text-white hover:bg-black duration-700 border shadow-xl flex items-center justify-center"
     on:click={toggleModal}
 >
-    +
+    <i class="fas fa-plus"></i>
 </button>
+
 
 <!-- Modal -->
 {#if isModalVisible}

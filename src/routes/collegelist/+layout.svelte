@@ -17,13 +17,13 @@
   </button>
 
   <!-- Logo -->
-  <div class="ml-4">
+  <!-- <div class="ml-4">
     <img
       class="w-12 h-12"
       src=""
       alt="Logo"
     />
-  </div>
+  </div> -->
 
   <!-- Drawer -->
   {#if isDrawerOpen}
