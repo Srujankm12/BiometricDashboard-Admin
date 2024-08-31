@@ -7,7 +7,7 @@
   }
 </script>
 
-<header class="bg-black flex items-center p-3">
+<header class="bg-black flex items-center p-3 fixed w-full"> 
   <!-- Drawer Toggle Button -->
   <button
     class="px-4 py-2 text-2xl bg-black text-white rounded-full fa-solid fa-bars"
@@ -41,7 +41,7 @@
           <li>
             <button
               class="flex items-center text-lg text-black text-left rounded-lg hover:text-white hover:bg-black duration-300 py-3 px-4 font-semibold w-full"
-              on:click={() => goto('/collegelist')}
+              on:click={() => {goto('/collegelist'); isDrawerOpen = false;}}
             >
               <i class="fa-solid fa-home mr-3"></i> <!-- Home Icon -->
               Home
@@ -50,7 +50,7 @@
           <li>
             <button
               class="flex items-center text-lg text-black text-left rounded-lg hover:text-white hover:bg-black duration-300 py-3 px-4 font-semibold w-full"
-              on:click={() => goto('/manageuser')}
+              on:click={() => {goto('/manageuser'); isDrawerOpen = false;}}
             >
               <i class="fa-solid fa-user-cog mr-3"></i> <!-- Manage User Icon -->
               Manage User
@@ -59,7 +59,7 @@
           <li>
             <button
               class="flex items-center text-lg text-black text-left rounded-lg hover:text-white hover:bg-black duration-300 py-3 px-4 font-semibold w-full"
-              on:click={() => goto('/setting')}
+              on:click={() => {goto('/manageuser'); isDrawerOpen = false;}}
             >
               <i class="fa-solid fa-cogs mr-3"></i> <!-- Settings Icon -->
               Settings
@@ -68,7 +68,7 @@
           <li>
             <button
               class="flex items-center text-lg text-black text-left rounded-lg hover:text-white hover:bg-black duration-300 py-3 px-4 font-semibold w-full"
-              on:click={() => goto('/logout')}
+              on:click={() => {goto('/logout'); isDrawerOpen = false;}}
             >
               <i class="fa-solid fa-sign-out-alt mr-3"></i> <!-- Logout Icon -->
               Logout

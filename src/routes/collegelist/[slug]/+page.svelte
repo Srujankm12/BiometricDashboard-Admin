@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
 
   let unitId = ''; // Variable for user input in delete modal
   let createUnitId = ''; // Variable for creating a new unit ID
@@ -11,7 +12,7 @@
   let isCreating = false; // Track loading state for the "Add Unit" button
   let unitIdToDelete = ''; // Track unit ID for deletion
   let deleteErrorMessage = ''; // Error message for invalid delete input
-
+  let isMachineNotPresent = false;
   export let data;
 
   const fetchTableData = async () => {
@@ -22,7 +23,7 @@
         body: JSON.stringify({ user_id: data.slug }),
       });
       const result = await response.json();
-      if (response.ok && Array.isArray(result.data)) {
+      if (response.ok) {
         tableData = result['data'];
       } else {
         responseMessage = result['message'] || 'Unexpected error';
@@ -31,6 +32,9 @@
       responseMessage = 'Fetch error: ' + error.message;
     } finally {
       isLoading = false;
+      if(tableData === null) {
+        isMachineNotPresent = true;
+      }
     }
   };
 
@@ -110,18 +114,23 @@
   };
 </script>
 
-<div class="overflow-x-auto p-4">
+<div class="overflow-x-auto p-6 pt-32">
   <div class="max-h-screen overflow-y-auto">
-    {#if isLoading}
-      <div class="flex items-center justify-center py-8">
-        <div class="spinner-black"></div>
-      </div>
-    {:else}
-      <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <thead class="bg-black text-white sticky top-0">
+{#if isLoading}
+  <div class="fixed inset-0 flex items-center justify-center">
+      <div class="spinner-black"></div>
+  </div>
+{:else if isMachineNotPresent}
+  <div class="fixed inset-0 flex flex-col items-center justify-center text-center">
+    <i class="fa-solid fa-gears text-8xl mb-4"></i>
+    <h1 class="text-4xl">No Machines available</h1>
+  </div>
+{:else}
+      <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden" transition:fade>
+        <thead class="bg-black text-white top-0">
           <tr>
-            <th class="py-3 px-4">ID</th>
             <th class="py-3 px-4">Unit ID</th>
+            <th class="py-3 px-4">User ID</th>
             <th class="py-3 px-4">Status</th>
             <th class="py-3 px-4">Actions</th>
           </tr>
@@ -149,14 +158,14 @@
   </div>
 
   <button
-    class="w-16 h-16 bg-black fixed bottom-4 right-4 text-white text-center text-3xl font-medium rounded-full hover:opacity-80 duration-300 border shadow-xl"
+    class="w-16 h-16 bg-black fixed bottom-12 right-8 text-white text-center text-3xl font-medium rounded-full shadow-xl"
     on:click={() => toggleModal('create')}
   >
     <i class="fas fa-plus"></i>
   </button>
 
   {#if showDeleteModal}
-    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-6">
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-6" transition:fade>
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h1 class="text-xl font-bold mb-4">Confirm Deletion</h1>
         <p class="text-gray-700 mb-4">Are you sure you want to delete unit ID: <strong>{unitIdToDelete}</strong>?</p>
@@ -195,8 +204,8 @@
   {/if}
 
   {#if showCreateModal}
-    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-6">
-      <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg space-y-6">
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-6" transition:fade>
+      <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg space-y-6 h-[24rem]">
         <h1 class="text-2xl font-bold text-center text-gray-800">Create a New Unit ID</h1>
         <div>
           <label class="block text-gray-700 font-semibold mb-2" for="unitId">Unit ID</label>
@@ -210,7 +219,7 @@
         </div>
         <div class="flex justify-between">
           <button
-            on:click={addMachine}
+            type="submit"
             class="relative w-full bg-black text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center"
             disabled={isCreating}
           >
@@ -234,12 +243,12 @@
 
 <style>
   .spinner-black {
-    border: 4px solid rgba(0, 0, 0, 0.3);
+    border: 8px solid rgba(0, 0, 0, 0);
     border-radius: 50%;
-    border-top: 4px solid black;
-    width: 24px;
-    height: 24px;
-    animation: spin 0.8s linear infinite;
+    border-top: 8px solid black;
+    width: 64px;
+    height: 64px;
+    animation: spin 1s linear infinite;
   }
 
   .spinner-add {

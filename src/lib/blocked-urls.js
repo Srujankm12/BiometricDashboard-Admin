@@ -1,5 +1,5 @@
-export const blockedUrls = [
-    '/collegelist',
-    '/manageuser',
+// export const blockedUrls = [
+//     '/collegelist',
+//     '/manageuser',
  
-];
+// ];
